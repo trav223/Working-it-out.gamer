@@ -25,5 +25,11 @@ const items = {
     type: "artifact",
     focusBoost: 5
   }
+function generateItemCode(category, name, level){
+  return category + "_" + name.toLowerCase().replaceAll(" ", "_") + "_" + level;
+}
+
+let id = generateItemCode("weapon", "Dwarven Axe", 2);
+console.log(id);
 
 };
