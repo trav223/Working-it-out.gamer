@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mythic Training</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#111;
+    color:white;
+    text-align:center;
+}
+
+.tab{
+    display:none;
+    padding:20px;
+}
+
+button{
+    padding:12px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+}
+
+.nav{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#222;
+    padding:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Mythic Training</h1>
+
+<!-- PROFILE TAB -->
+<div id="profile" class="tab" style="display:block">
+<h2>Hero Setup</h2>
+
+<input id="weight" placeholder="Weight"><br><br>
+<input id="routine" placeholder="Daily Routine"><br><br>
+
+<button onclick="saveProfile()">Begin Journey</button>
+
+<p id="profileResult"></p>
+</div>
+
+<!-- TRAINING TAB -->
+<div id="training" class="tab">
+<h2>Daily Training</h2>
+
+<p>XP: <span id="xp">0</span></p>
+
+<button onclick="gainXP()">Strength Workout</button>
+<button onclick="gainXP()">Cardio</button>
+<button onclick="gainXP()">Flexibility</button>
+</div>
+
+<!-- MENTAL TAB -->
+<div id="mental" class="tab">
+<h2>Mental Space</h2>
+
+<p>Select your class:</p>
+
+<button onclick="mentalXP()">Monk (Focus)</button>
+<button onclick="mentalXP()">Scholar (Learning)</button>
+<button onclick="mentalXP()">Berserker (Discipline)</button>
+<button onclick="mentalXP()">Druid (Calm)</button>
+</div>
+
+<!-- BOSS TAB -->
+<div id="boss" class="tab">
+<h2>Boss Battles</h2>
+
+<p id="bossText">
+Train to unlock mythic bosses.
+</p>
+</div>
+
+<!-- SHOP TAB -->
+<div id="shop" class="tab">
+<h2>Dwarven Shop Portal</h2>
+
+<p id="shopText">
+Complete workouts to open portal.
+</p>
+
+<button onclick="openPortal()">Enter Portal</button>
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav">
+<button onclick="openTab('profile')">Profile</button>
+<button onclick="openTab('training')">Training</button>
+<button onclick="openTab('mental')">Mental</button>
+<button onclick="openTab('boss')">Boss</button>
+<button onclick="openTab('shop')">Shop</button>
+</div>
+
+<script>
+
+let xp = 0;
+
+function openTab(tabName){
+    let tabs = document.getElementsByClassName("tab");
+    for(let i=0;i<tabs.length;i++){
+        tabs[i].style.display="none";
+    }
+
+    document.getElementById(tabName).style.display="block";
+}
+
+function saveProfile(){
+    document.getElementById("profileResult").innerText =
+    "Hero Created!";
+}
+
+function gainXP(){
+    xp += 20;
+    updateXP();
+}
+
+function mentalXP(){
+    xp += 10;
+    updateXP();
+}
+
+function updateXP(){
+    document.getElementById("xp").innerText = xp;
+
+    if(xp >= 100){
+        document.getElementById("bossText").innerText =
+        "Boss Unlocked!";
+    }
+
+    if(xp >= 60){
+        document.getElementById("shopText").innerText =
+        "Portal energy ready!";
+    }
+}
+
+function openPortal(){
+    if(xp >= 60){
+        alert("Portal opens to the Dwarven Realm!");
+    } else {
+        alert("Train more to open portal.");
+    }
+}
+
+</script>
+
+</body>
+</html>
