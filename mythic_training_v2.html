@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mythic Training RPG</title>
+
+<style>
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    text-align:center;
+}
+
+.tab{
+    display:none;
+    padding:20px;
+}
+
+.nav{
+    position:fixed;
+    bottom:0;
+    width:100%;
+    background:#020617;
+    padding:10px;
+}
+
+button{
+    padding:10px;
+    margin:5px;
+    border-radius:8px;
+    border:none;
+}
+
+.bar{
+    width:80%;
+    height:20px;
+    background:#333;
+    margin:auto;
+    border-radius:10px;
+}
+
+.fill{
+    height:100%;
+    background:lime;
+    border-radius:10px;
+}
+
+.portal{
+    font-size:26px;
+    animation:spin 2s linear infinite;
+}
+
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+</style>
+</head>
+
+<body>
+
+<h1>Mythic Training</h1>
+
+<!-- LEVEL DISPLAY -->
+<p>Level: <span id="level">1</span></p>
+
+<div class="bar">
+<div id="xpBar" class="fill" style="width:0%"></div>
+</div>
+
+<p>XP: <span id="xp">0</span></p>
+
+<!-- PROFILE -->
+<div id="profile" class="tab" style="display:block">
+
+<h2>Hero Setup</h2>
+
+<input id="weight" placeholder="Weight"><br><br>
+<input id="routine" placeholder="Daily Routine"><br><br>
+
+<button onclick="saveProfile()">Begin Journey</button>
+
+</div>
+
+<!-- TRAINING -->
+<div id="training" class="tab">
+
+<h2>Daily Training</h2>
+
+<button onclick="gainXP(20)">Strength Workout</button>
+<button onclick="gainXP(20)">Cardio</button>
+<button onclick="gainXP(20)">Flexibility</button>
+
+</div>
+
+<!-- MENTAL -->
+<div id="mental" class="tab">
+
+<h2>Mental Space</h2>
+
+<button onclick="gainXP(10)">Monk Focus</button>
+<button onclick="gainXP(10)">Scholar Learning</button>
+<button onclick="gainXP(10)">Druid Calm</button>
+<button onclick="gainXP(10)">Berserker Discipline</button>
+
+</div>
+
+<!-- EQUIPMENT -->
+<div id="gear" class="tab">
+
+<h2>Equipment</h2>
+
+<p>Gold: <span id="gold">0</span></p>
+
+<p>Owned Gear:</p>
+<ul id="gearList"></ul>
+
+</div>
+
+<!-- BOSS -->
+<div id="boss" class="tab">
+
+<h2>Boss Battle</h2>
+
+<p>Boss HP: <span id="bossHP">100</span></p>
+
+<button onclick="attackBoss()">Attack</button>
+
+<p id="bossResult"></p>
+
+</div>
+
+<!-- SHOP -->
+<div id="shop" class="tab">
+
+<h2>Dwarven Portal Shop</h2>
+
+<div id="portalArea">
+<p>Complete training to open portal</p>
+</div>
+
+<button onclick="buyGear()">Buy Armor (50 gold)</button>
+
+</div>
+
+<!-- NAV -->
+<div class="nav">
+<button onclick="openTab('profile')">Profile</button>
+<button onclick="openTab('training')">Training</button>
+<button onclick="openTab('mental')">Mental</button>
+<button onclick="openTab('gear')">Gear</button>
+<button onclick="openTab('boss')">Boss</button>
+<button onclick="openTab('shop')">Shop</button>
+</div>
+
+<script>
+
+/* DATA */
+let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+let gold = localStorage.getItem("gold") ? parseInt(localStorage.getItem("gold")) : 0;
+let bossHP = 100;
+
+let gear = JSON.parse(localStorage.getItem("gear") || "[]");
+
+/* NAVIGATION */
+function openTab(tab){
+    let tabs=document.getElementsByClassName("tab");
+    for(let i=0;i<tabs.length;i++){
+        tabs[i].style.display="none";
+    }
+    document.getElementById(tab).style.display="block";
+}
+
+/* PROFILE */
+function saveProfile(){
+    alert("Hero Created!");
+}
+
+/* XP SYSTEM */
+function gainXP(amount){
+    xp += amount;
+    gold += 10;
+
+    if(xp >= level*100){
+        xp = 0;
+        level++;
+        alert("LEVEL UP!");
+    }
+
+    saveGame();
+    updateUI();
+    checkPortal();
+}
+
+function updateUI(){
+    document.getElementById("xp").innerText=xp;
+    document.getElementById("level").innerText=level;
+    document.getElementById("gold").innerText=gold;
+
+    document.getElementById("xpBar").style.width = (xp/(level*100))*100 + "%";
+
+    updateGear();
+}
+
+/* SAVE SYSTEM */
+function saveGame(){
+    localStorage.setItem("xp",xp);
+    localStorage.setItem("level",level);
+    localStorage.setItem("gold",gold);
+    localStorage.setItem("gear",JSON.stringify(gear));
+}
+
+/* PORTAL */
+function checkPortal(){
+    if(xp >= 40){
+        document.getElementById("portalArea").innerHTML =
+        "<div class='portal'>🌀</div><p>Portal Open to Dwarven Realm</p>";
+    }
+}
+
+/* GEAR */
+function buyGear(){
+    if(gold >= 50){
+        gold -= 50;
+        gear.push("Dwarven Armor");
+        saveGame();
+        updateUI();
+    } else {
+        alert("Not enough gold");
+    }
+}
+
+function updateGear(){
+    let list=document.getElementById("gearList");
+    list.innerHTML="";
+
+    gear.forEach(g=>{
+        let li=document.createElement("li");
+        li.innerText=g;
+        list.appendChild(li);
+    });
+}
+
+/* BOSS SYSTEM */
+function attackBoss(){
+    bossHP -= (10 + level*2);
+
+    if(bossHP <= 0){
+        document.getElementById("bossResult").innerText="Boss Defeated!";
+        gold += 100;
+        bossHP = 100;
+    }
+
+    document.getElementById("bossHP").innerText=bossHP;
+    saveGame();
+    updateUI();
+}
+
+updateUI();
+
+</script>
+</body>
+</html>
