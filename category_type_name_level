@@ -1,0 +1,29 @@
+const items = {
+
+  weapon_hammer_thor_1: {
+    name: "Hammer of Strength",
+    type: "weapon",
+    power: 15,
+    levelRequired: 2
+  },
+
+  armor_dwarven_plate_1: {
+    name: "Dwarven Armor",
+    type: "armor",
+    defense: 10,
+    levelRequired: 1
+  },
+
+  potion_stamina_small: {
+    name: "Small Stamina Potion",
+    type: "potion",
+    staminaBoost: 20
+  },
+
+  artifact_rune_focus: {
+    name: "Rune of Focus",
+    type: "artifact",
+    focusBoost: 5
+  }
+
+};
